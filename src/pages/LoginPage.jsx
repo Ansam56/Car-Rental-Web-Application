@@ -6,8 +6,8 @@ import { useAuth } from "../context/useAuth";
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
-  // const { user, loading: authLoading, login } = useAuth();
-  const { login } = useAuth();
+  const { user, loading: authLoading, login } = useAuth();
+  // const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +16,9 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
 
-  // لو المستخدم مسجّل، ما يرجع يشوف صفحة اللوجين
-  // if (!authLoading && user) {
-  //   return <Navigate to="/" replace />;
-  // }
+  if (!authLoading && user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,8 +28,9 @@ export default function LoginPage() {
     try {
       await login(email, password);
       navigate("/");
-    } catch {
-      setError("Invalid email or password");
+    } catch (err) {
+      console.log("Firebase error:", err.code, err.message);
+      setError(err.code);
     } finally {
       setLoading(false);
     }

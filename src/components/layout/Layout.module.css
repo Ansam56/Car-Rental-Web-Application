@@ -1,0 +1,121 @@
+/* .container {
+  min-height: 100vh;
+  background: #020617;
+  color: #f8fafc;
+} */
+.appLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+}
+
+.sidebar {
+  width: 240px;
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.main {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.navbar {
+  height: 64px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  justify-content: center;
+}
+
+.profile img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+nav button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e5e7eb;
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  text-align: left;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+nav button:hover {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.active {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: #6366f1;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #cbd5f5;
+  border: 1px solid #334155;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  background: #1e293b;
+}

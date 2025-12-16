@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../services/firebase";
 import { AuthContext } from "./AuthContext";
 
@@ -27,8 +31,16 @@ export default function AuthProvider({ children }) {
     await signOut(auth);
   };
 
+  const login = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Firebase login error:", error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, role, loading, logout }}>
+    <AuthContext.Provider value={{ user, role, loading, logout, login }}>
       {children}
     </AuthContext.Provider>
   );
