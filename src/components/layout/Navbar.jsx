@@ -1,5 +1,5 @@
 import { FaPlus, FaSignOutAlt, FaCar } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styles from "./Layout.module.css";
 import { useAuth } from "../../context/useAuth";
 
@@ -16,10 +16,10 @@ export default function Navbar() {
 
   return (
     <header className={styles.navbar}>
-      <div className={styles.logo}>
+      <Link className={styles.logo} to="/">
         {" "}
         <FaCar size={40} />
-      </div>
+      </Link>
 
       <div className={styles.actions}>
         {isAdmin && (
