@@ -1,13 +1,12 @@
 import { motion as Motion } from "framer-motion";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal, Button } from "react-bootstrap";
 import { getCarById } from "../services/carService";
 import { useAuth } from "../context/useAuth";
 import ImageSlider from "../components/cars/ImageSlider";
 import styles from "./CarDetailsPage.module.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCar } from "../services/carService";
 
 export default function CarDetailsPage() {
@@ -32,7 +31,7 @@ export default function CarDetailsPage() {
     mutationFn: deleteCar,
     onSuccess: () => {
       queryClient.invalidateQueries(["cars"]);
-      navigate("/"); // رجّعه للـ home
+      navigate("/");
     },
   });
 
