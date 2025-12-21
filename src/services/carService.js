@@ -1,4 +1,12 @@
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 export async function getCars() {
@@ -11,4 +19,17 @@ export async function getCarById(id) {
   const data = await getDoc(docRef);
   if (!data.exists()) throw new Error("Car not found");
   return { id: data.id, ...data.data() };
+}
+
+export async function addCar(car) {
+  await addDoc(collection(db, "cars"), car);
+}
+
+export async function updateCar(id, car) {
+  const ref = doc(db, "cars", id);
+  await updateDoc(ref, car);
+}
+
+export async function deleteCar(carId) {
+  await deleteDoc(doc(db, "cars", carId));
 }
