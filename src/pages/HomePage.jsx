@@ -13,8 +13,9 @@ export default function HomePage() {
     queryFn: getCars,
   });
 
-  if (isLoading) return <p style={{ padding: "2rem" }}>Loading...</p>;
-  if (error) return <p>Error loading cars</p>;
+  if (isLoading) return <p className={styles.state}>Loading...</p>;
+  if (error) return <p className={styles.state}>Failed to load cars</p>;
+
   return (
     <div className={styles.home}>
       <h1 className={styles.title}>Cars List</h1>

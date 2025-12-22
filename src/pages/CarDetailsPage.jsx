@@ -2,18 +2,26 @@ import { motion as Motion } from "framer-motion";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Modal, Button } from "react-bootstrap";
-import { getCarById } from "../services/carService";
+import { getCarById, deleteCar } from "../services/carService";
+import { processRental } from "../services/rentalService";
 import { useAuth } from "../context/useAuth";
 import ImageSlider from "../components/cars/ImageSlider";
+import RentModal from "../components/rental/RentModal";
 import styles from "./CarDetailsPage.module.css";
-import { deleteCar } from "../services/carService";
+import DeleteConfirmModal from "../components/cars/DeleteConfirmModal";
+import SuccessRentModal from "../components/rental/SuccessRentModal";
 
 export default function CarDetailsPage() {
   const { id } = useParams();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const { setEditingCar, setShow } = useOutletContext();
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRentModal, setShowRentModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const {
     data: car,
@@ -24,8 +32,20 @@ export default function CarDetailsPage() {
     queryFn: () => getCarById(id),
   });
 
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const rentMutation = useMutation({
+    mutationFn: (rentalData) =>
+      processRental({
+        ...rentalData,
+        userId: user.email,
+      }),
+    onSuccess: () => {
+      setShowRentModal(false);
+      setShowSuccessModal(true);
+    },
+    onError: (err) => {
+      alert("Error processing rental: " + err.message);
+    },
+  });
 
   const deleteMutation = useMutation({
     mutationFn: deleteCar,
@@ -35,8 +55,9 @@ export default function CarDetailsPage() {
     },
   });
 
-  if (isLoading) return <p className={styles.state}>Loading...</p>;
-  if (error) return <p className={styles.state}>Car not found</p>;
+  if (isLoading) return <p className={styles.state}>Loading car details...</p>;
+  if (error)
+    return <p className={styles.state}>Car not found or error occurred.</p>;
 
   return (
     <>
@@ -56,7 +77,7 @@ export default function CarDetailsPage() {
                   onClick={() => setShowDeleteModal(true)}
                   disabled={deleteMutation.isPending}
                 >
-                  Delete
+                  {deleteMutation.isPending ? "Deleting..." : "Delete"}
                 </button>
                 <button
                   onClick={() => {
@@ -64,55 +85,60 @@ export default function CarDetailsPage() {
                     setShow(true);
                   }}
                 >
-                  Edit
+                  Edit Car
                 </button>
               </>
             )}
 
-            {role === "user" && car.available && (
-              <button className={styles.rent}>
-                Rent – ${car.pricePerDay} / day
-              </button>
-            )}
+            {role === "user" &&
+              (car.available ? (
+                <button
+                  className={styles.rent}
+                  onClick={() => setShowRentModal(true)}
+                >
+                  Rent Now
+                </button>
+              ) : (
+                <button className={styles.disabledBtn} disabled>
+                  Currently Rented
+                </button>
+              ))}
           </div>
         </div>
 
         <ImageSlider images={car.images} />
 
         <div className={styles.description}>
-          <h3>Car Details</h3>
-
+          <h3>Specifications & Description</h3>
           {car.description.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}
+          <div className={styles.priceTag}>
+            Daily Rate: <strong>${car.pricePerDay}</strong>
+          </div>
         </div>
       </Motion.div>
 
-      <Modal
+      <RentModal
+        show={showRentModal}
+        onHide={() => setShowRentModal(false)}
+        car={car}
+        isLoading={rentMutation.isPending}
+        onConfirm={(data) => rentMutation.mutate(data)}
+      />
+
+      <DeleteConfirmModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete <strong>{car.name}</strong>? This
-          action cannot be undone.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => deleteMutation.mutate(car.id)}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete Car"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        onConfirm={() => deleteMutation.mutate(car.id)}
+        carName={car.name}
+        isLoading={deleteMutation.isPending}
+      />
+
+      <SuccessRentModal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+      />
     </>
   );
 }
