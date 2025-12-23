@@ -4,6 +4,8 @@ import { motion as Motion } from "framer-motion";
 import { FaCar, FaSignInAlt, FaExclamationCircle } from "react-icons/fa";
 import { useAuth } from "../context/useAuth";
 import styles from "./LoginPage.module.css";
+import Loader from "../components/UI/Loader";
+import ErrorBlock from "../components/UI/ErrorBlock.jsx";
 
 export default function LoginPage() {
   const { user, loading: authLoading, login } = useAuth();
@@ -29,8 +31,13 @@ export default function LoginPage() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      console.log("Firebase error:", err.code, err.message);
-      setError(err.code);
+      if (err.code === "auth/invalid-credential") {
+        setError("Invalid email or password.");
+      } else if (err.code === "auth/network-request-failed") {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred: " + err.code);
+      }
     } finally {
       setLoading(false);
     }
@@ -51,17 +58,6 @@ export default function LoginPage() {
             <h1 className={styles.title}>Welcome To CarsRental</h1>
             <p className={styles.subtitle}>Sign in to rent your dream car</p>
           </div>
-
-          {error && (
-            <Motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={styles.error}
-            >
-              <FaExclamationCircle size={16} />
-              {error}
-            </Motion.div>
-          )}
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.field}>
@@ -90,9 +86,18 @@ export default function LoginPage() {
               />
             </div>
 
+            {error && (
+              <Motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <ErrorBlock title="Login Failed" message={error} />
+              </Motion.div>
+            )}
+
             <button type="submit" className={styles.button} disabled={loading}>
               {loading ? (
-                "Signing in..."
+                <Loader />
               ) : (
                 <>
                   <FaSignInAlt size={16} />

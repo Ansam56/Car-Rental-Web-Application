@@ -10,6 +10,8 @@ import RentModal from "../components/rental/RentModal";
 import styles from "./CarDetailsPage.module.css";
 import DeleteConfirmModal from "../components/cars/DeleteConfirmModal";
 import SuccessRentModal from "../components/rental/SuccessRentModal";
+import Loader from "../components/UI/Loader";
+import ErrorBlock from "../components/UI/ErrorBlock";
 
 export default function CarDetailsPage() {
   const { id } = useParams();
@@ -42,9 +44,6 @@ export default function CarDetailsPage() {
       setShowRentModal(false);
       setShowSuccessModal(true);
     },
-    onError: (err) => {
-      alert("Error processing rental: " + err.message);
-    },
   });
 
   const deleteMutation = useMutation({
@@ -55,9 +54,20 @@ export default function CarDetailsPage() {
     },
   });
 
-  if (isLoading) return <p className={styles.state}>Loading car details...</p>;
-  if (error)
-    return <p className={styles.state}>Car not found or error occurred.</p>;
+  if (isLoading) return <Loader />;
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <ErrorBlock
+          title="An error occurred"
+          message={error.message || "Failed to fetch car data."}
+        />
+        <button onClick={() => navigate("/")} className={styles.button}>
+          Back to Home
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -109,7 +119,7 @@ export default function CarDetailsPage() {
         <ImageSlider images={car.images} />
 
         <div className={styles.description}>
-          <h3>Specifications & Description</h3>
+          <h3>Details</h3>
           {car.description.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}

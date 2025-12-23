@@ -32,11 +32,7 @@ export default function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error("Firebase login error:", error);
-    }
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   return (

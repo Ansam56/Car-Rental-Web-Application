@@ -1,0 +1,30 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #f9fafb;
+  font-family: "Inter", sans-serif;
+}
+
+.errorCode {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #6366f1;
+  margin: 0;
+  line-height: 1;
+}
+
+.errorMessage {
+  font-size: 2rem;
+  color: #111827;
+  margin: 10px 0;
+}
+
+.text {
+  color: #6b7280;
+  margin-bottom: 30px;
+  max-width: 400px;
+}

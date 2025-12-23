@@ -1,0 +1,80 @@
+.container {
+  /* max-width: 1000px; */
+  margin: 10px auto;
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.historyTable th {
+  background-color: #f8f9fa;
+  padding: 15px;
+  color: #666;
+  font-weight: 600;
+  border-bottom: 2px solid #eee;
+}
+
+.historyTable td {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+}
+.historyTable tbody tr:first-child {
+  background-color: rgba(99, 102, 241, 0.05);
+  border-left: 4px solid #6366f1;
+}
+.idText {
+  font-size: 0.8rem;
+  color: #888;
+  font-family: monospace;
+}
+
+.carName {
+  color: #000;
+}
+
+.price {
+  color: #2ecc71;
+}
+
+.statusBadge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 50px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  color: #888;
+}
+
+.loader {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 1.2rem;
+}
