@@ -23,3 +23,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+import loginActions from "../pageObjects/login/actions.cy";
+import logoutActions from "../pageObjects/logout/actions.cy";
+
+const loginactions = new loginActions();
+const logoutactions = new logoutActions();
+Cypress.Commands.add("loginToCarRentals", (email, password) => {
+  cy.visit("/login");
+  cy.url().should("include", "/login");
+  loginactions.typeInEmail(email);
+  loginactions.typeInPassword(password);
+  loginactions.clickOnLoginButton();
+});
+
+Cypress.Commands.add("logout", () => {
+  logoutactions.clickOnLogout();
+});
