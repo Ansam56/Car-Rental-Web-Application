@@ -13,10 +13,14 @@ class CarActions {
     return this;
   }
 
-  typeInImageURL(image) {
-    let idx = 2;
-    cy.get(".form-control").eq(idx).clear().type(image);
-    idx++;
+  typeInImageURL(carImages) {
+    carImages.forEach((image, idx) => {
+      cy.get(".form-control")
+        .eq(idx + 2)
+        .clear()
+        .type(image);
+      this.clickOnAddImageButton();
+    });
     return this;
   }
 
@@ -32,6 +36,25 @@ class CarActions {
 
   clickOnSaveButton() {
     cy.contains("button", "Save").click();
+    return this;
+  }
+
+  clickOnCarCard(carName) {
+    cy.contains("a", carName).click();
+    return this;
+  }
+
+  clickOnEditButton() {
+    cy.contains("button", "Edit Car").click();
+    return this;
+  }
+
+  clickOnDeleteButton() {
+    cy.contains("button", "Delete").click();
+    return this;
+  }
+  clickOnConfirmDeleteButton() {
+    cy.contains("button", "Confirm Delete").click();
     return this;
   }
 }
