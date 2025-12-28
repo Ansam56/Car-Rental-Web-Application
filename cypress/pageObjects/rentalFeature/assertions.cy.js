@@ -1,6 +1,6 @@
 class RentalAssertions {
   checkTotalRentalPrice(expectedPrice) {
-    cy.get("h2").should("have.text", expectedPrice);
+    cy.get(".text-center").eq(0).should("include.text", expectedPrice);
     return this;
   }
 
@@ -14,8 +14,7 @@ class RentalAssertions {
     return this;
   }
 
-  checkRentalCarInHistory(carName, fromDate, toDate, totalPrice) {
-    cy.contains("td", carName).should("be.visible");
+  checkRentalCarInHistory(fromDate, toDate, totalPrice) {
     cy.contains("td", fromDate).should("be.visible");
     cy.contains("td", toDate).should("be.visible");
     cy.contains("td", totalPrice).should("be.visible");

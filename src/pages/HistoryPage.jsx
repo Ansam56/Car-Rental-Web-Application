@@ -61,8 +61,8 @@ export default function HistoryPage() {
           <table className={styles.historyTable}>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Car ID</th>
-                <th>Car Name</th>
                 <th>From</th>
                 <th>To</th>
                 <th>Total $</th>
@@ -73,11 +73,11 @@ export default function HistoryPage() {
                 const [start, end] = rental.period.split(" - ");
                 return (
                   <tr key={rental.id}>
-                    <td className={styles.idText}>{rental.carId}</td>
-                    <td className={styles.carName}>{rental.carName}</td>
+                    <td>{rental.id}</td>
+                    <td>{rental.carId}</td>
                     <td>{formatDate(start)}</td>
                     <td>{formatDate(end)}</td>
-                    <td className={styles.price}>${rental.totalPrice}</td>
+                    <td>${rental.totalPrice}</td>
                   </tr>
                 );
               })}

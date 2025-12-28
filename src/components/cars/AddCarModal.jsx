@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { IoMdClose } from "react-icons/io";
 
 export default function AddCarModal({
   show,
@@ -8,69 +9,106 @@ export default function AddCarModal({
   isLoading,
   initialData,
 }) {
-  const [name, setName] = useState(initialData?.name || "");
-  const [pricePerDay, setPricePerDay] = useState(
-    initialData?.pricePerDay || ""
-  );
-  const [description, setDescription] = useState(
-    initialData?.description || ""
-  );
-  const [images, setImages] = useState(initialData?.images || [""]);
-  const [available, setAvailable] = useState(initialData?.available ?? true);
+  const [form, setForm] = useState({
+    name: "",
+    pricePerDay: "",
+    description: "",
+    images: [""],
+    available: true,
+  });
 
-  const handleImageChange = (i, value) => {
-    const copy = [...images];
-    copy[i] = value;
-    setImages(copy);
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        name: initialData.name || "",
+        pricePerDay: initialData.pricePerDay || "",
+        description: initialData.description || "",
+        images: initialData.images?.length ? initialData.images : [""],
+        available: initialData.available ?? true,
+      });
+    }
+  }, [initialData]);
+
+  const updateField = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const addImageField = () => setImages([...images, ""]);
+  const handleImageChange = (index, value) => {
+    const copy = [...form.images];
+    copy[index] = value;
+    updateField("images", copy);
+  };
+
+  const addImageField = () => {
+    updateField("images", [...form.images, ""]);
+  };
+
+  const removeImageField = (index) => {
+    updateField(
+      "images",
+      form.images.filter((_, i) => i !== index)
+    );
+  };
+
+  const isValid =
+    form.name.trim() &&
+    Number(form.pricePerDay) > 0 &&
+    form.images.some((img) => img.trim() !== "");
 
   const handleSubmit = () => {
     onSubmit({
-      name,
-      pricePerDay: Number(pricePerDay),
-      description,
-      images: images.filter((img) => img.trim() !== ""),
-      available,
+      ...form,
+      pricePerDay: Number(form.pricePerDay),
+      images: form.images.filter((img) => img.trim() !== ""),
     });
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={!isLoading ? onHide : undefined} centered>
+      <Modal.Header closeButton={!isLoading}>
         <Modal.Title>{initialData ? "Edit Car" : "Add New Car"}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="carName">
             <Form.Label>Car Name</Form.Label>
             <Form.Control
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter car name"
+              value={form.name}
+              onChange={(e) => updateField("name", e.target.value)}
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="pricePerDay">
             <Form.Label>Price Per Day</Form.Label>
             <Form.Control
               type="number"
-              value={pricePerDay}
-              onChange={(e) => setPricePerDay(e.target.value)}
+              placeholder="e.g. 50"
+              value={form.pricePerDay}
+              onChange={(e) => updateField("pricePerDay", e.target.value)}
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Image URLs</Form.Label>
-            {images.map((img, i) => (
-              <Form.Control
-                key={i}
-                className="mb-2"
-                value={img}
-                placeholder={`Image ${i + 1}`}
-                onChange={(e) => handleImageChange(i, e.target.value)}
-              />
+            {form.images.map((img, i) => (
+              <div key={i} className="d-flex gap-2 mb-2">
+                <Form.Control
+                  placeholder={`Image ${i + 1}`}
+                  value={img}
+                  onChange={(e) => handleImageChange(i, e.target.value)}
+                />
+                {form.images.length > 1 && (
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => removeImageField(i)}
+                  >
+                    <IoMdClose />
+                  </Button>
+                )}
+              </div>
             ))}
             <Button
               size="sm"
@@ -81,34 +119,38 @@ export default function AddCarModal({
             </Button>
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
               rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Car description..."
+              value={form.description}
+              onChange={(e) => updateField("description", e.target.value)}
             />
           </Form.Group>
-          <Form.Group className="mb-3">
+
+          <Form.Group>
             <Form.Check
               type="switch"
               id="available-switch"
-              label={
-                available ? "Car is Available" : "Car is Unavailable (Disabled)"
-              }
-              checked={available}
-              onChange={(e) => setAvailable(e.target.checked)}
+              label={form.available ? "Car is Available" : "Car is Unavailable"}
+              checked={form.available}
+              onChange={(e) => updateField("available", e.target.checked)}
             />
           </Form.Group>
         </Form>
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button variant="secondary" onClick={onHide} disabled={isLoading}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={handleSubmit} disabled={isLoading}>
+        <Button
+          variant="primary"
+          onClick={handleSubmit}
+          disabled={isLoading || !isValid}
+        >
           {isLoading ? "Saving..." : "Save"}
         </Button>
       </Modal.Footer>

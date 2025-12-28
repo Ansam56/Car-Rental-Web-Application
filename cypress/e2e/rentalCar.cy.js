@@ -6,7 +6,7 @@ const rentalFeaturesAction = new rentalFeaturesActions();
 const rentalFeaturesAssertion = new rentalFeaturesAsserions();
 
 describe("Check rental car Functionality", () => {
-  beforeEach("", () => {
+  before("", () => {
     cy.loginToCarRentals("normal@normal.com", "normal123");
     cy.wait(1000);
   });
@@ -20,12 +20,7 @@ describe("Check rental car Functionality", () => {
     rentalFeaturesAction.clickOnRentButton();
     rentalFeaturesAssertion
       .checkBookingConfirmationMessage()
-      .checkRentalCarInHistory(
-        "Nissan Sentra",
-        "1/8/2026",
-        "1/10/2026",
-        "$210"
-      );
+      .checkRentalCarInHistory("1/8/2026", "1/10/2026", "$210");
   });
 
   after("", () => {

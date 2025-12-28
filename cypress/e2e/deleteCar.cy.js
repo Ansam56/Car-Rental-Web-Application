@@ -6,7 +6,7 @@ const carFeaturesAction = new carFeaturesActions();
 const carFeaturesAssertion = new carFeaturesAsserions();
 
 describe("Check delete car Functionality", () => {
-  beforeEach("", () => {
+  before("", () => {
     cy.loginToCarRentals("admin@admin.com", "admin123");
     cy.wait(1000);
   });
