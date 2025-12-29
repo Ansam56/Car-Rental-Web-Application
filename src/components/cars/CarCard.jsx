@@ -40,7 +40,7 @@ export default function CarCard({ car }) {
           <p className={styles.price}>${car.pricePerDay} / day</p>
 
           {role !== "admin" && (
-            <button className={styles.rentBtn} disabled={!car.available}>
+            <button disabled={!car.available}>
               {car.available ? "Rent Now" : "Unavailable"}
             </button>
           )}

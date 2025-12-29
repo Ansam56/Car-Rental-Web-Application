@@ -1,27 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/useAuth";
-import { db } from "../services/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
 import styles from "./HistoryPage.module.css";
 import Loader from "../components/UI/Loader";
+import { getRentals } from "../services/rentalService";
 import ErrorBlock from "../components/UI/ErrorBlock";
 
 export default function HistoryPage() {
   const { user } = useAuth();
-
-  const fetchMyRentals = async () => {
-    const q = query(
-      collection(db, "rentals"),
-      where("userId", "==", user.email)
-    );
-    const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return data.sort((a, b) => new Date(b.rentedAt) - new Date(a.rentedAt));
-  };
-
   const {
     data: rentals,
     isLoading,
@@ -29,7 +14,7 @@ export default function HistoryPage() {
     isError,
   } = useQuery({
     queryKey: ["myRentals", user?.email],
-    queryFn: fetchMyRentals,
+    queryFn: () => getRentals(user.email),
     enabled: !!user?.email,
   });
 

@@ -3,7 +3,7 @@ import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCarById, deleteCar } from "../services/carService";
-import { processRental } from "../services/rentalService";
+import { makeRental } from "../services/rentalService";
 import { useAuth } from "../context/useAuth";
 import ImageSlider from "../components/cars/ImageSlider";
 import RentModal from "../components/rental/RentModal";
@@ -36,7 +36,7 @@ export default function CarDetailsPage() {
 
   const rentMutation = useMutation({
     mutationFn: (rentalData) =>
-      processRental({
+      makeRental({
         ...rentalData,
         userId: user.email,
       }),
@@ -109,9 +109,7 @@ export default function CarDetailsPage() {
                   Rent Now
                 </button>
               ) : (
-                <button className={styles.disabledBtn} disabled>
-                  Currently Rented
-                </button>
+                <button disabled>Currently Rented</button>
               ))}
           </div>
         </div>
@@ -123,7 +121,7 @@ export default function CarDetailsPage() {
           {car.description.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}
-          <div className={styles.priceTag}>
+          <div>
             Daily Rate: <strong>${car.pricePerDay}</strong>
           </div>
         </div>
