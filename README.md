@@ -21,7 +21,7 @@ A modern **Car Rental web application** built with React, Firebase and React Que
 
 ----
 
-## Project Documentation : 
+## Project Documentation 
 
 You can find the project details, requirements, and technical guides in the following files:
 
